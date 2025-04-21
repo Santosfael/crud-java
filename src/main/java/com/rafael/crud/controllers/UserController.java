@@ -1,6 +1,7 @@
 package com.rafael.crud.controllers;
 
 import com.rafael.crud.DTOs.CreateUserDTO;
+import com.rafael.crud.DTOs.UpdateUserDTO;
 import com.rafael.crud.Services.UserService;
 import com.rafael.crud.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,13 @@ public class UserController {
         var users = userService.listUsers();
 
         return ResponseEntity.ok(users);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<Void> updateUserById(@PathVariable("userId") String userId,
+                                               @RequestBody UpdateUserDTO updateUserDTO) {
+        userService.updateUserById(userId, updateUserDTO);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{userId}")

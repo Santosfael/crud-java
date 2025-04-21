@@ -1,6 +1,7 @@
 package com.rafael.crud.Services;
 
 import com.rafael.crud.DTOs.CreateUserDTO;
+import com.rafael.crud.DTOs.UpdateUserDTO;
 import com.rafael.crud.entity.User;
 import com.rafael.crud.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,29 @@ public class UserService {
 
     public List<User> listUsers() {
         return userRepository.findAll();
+    }
+
+    public void updateUserById(String userId, UpdateUserDTO updateUserDTO) {
+        var id = UUID.fromString(userId);
+        var userEntity = userRepository.findById(id);
+
+        if (userEntity.isPresent()) {
+            var user = userEntity.get();
+
+            if (updateUserDTO.userName() != null) {
+                user.setUserName(updateUserDTO.userName());
+            }
+
+            if (updateUserDTO.fullName() != null) {
+                user.setFullName(updateUserDTO.fullName());
+            }
+
+            if (updateUserDTO.password() != null) {
+                user.setPassword(updateUserDTO.password());
+            }
+
+            userRepository.save(user);
+        }
     }
 
     public void deleteUserById(String userId) {
