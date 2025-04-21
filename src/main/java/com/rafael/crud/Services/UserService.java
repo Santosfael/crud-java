@@ -5,6 +5,7 @@ import com.rafael.crud.DTOs.UpdateUserDTO;
 import com.rafael.crud.entity.User;
 import com.rafael.crud.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -19,13 +20,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+
     public UUID createUser(CreateUserDTO createUserDTO) {
         var entity = new User(
                 null,
                 createUserDTO.userName(),
                 createUserDTO.fullName(),
                 createUserDTO.email(),
-                createUserDTO.password(),
+                encoder.encode(createUserDTO.password()),
                 Instant.now(),
                 null);
 
@@ -58,7 +61,7 @@ public class UserService {
             }
 
             if (updateUserDTO.password() != null) {
-                user.setPassword(updateUserDTO.password());
+                user.setPassword(encoder.encode(updateUserDTO.password()));
             }
 
             userRepository.save(user);
