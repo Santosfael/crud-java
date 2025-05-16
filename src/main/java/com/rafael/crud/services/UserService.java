@@ -1,7 +1,7 @@
-package com.rafael.crud.Services;
+package com.rafael.crud.services;
 
-import com.rafael.crud.DTOs.CreateUserDTO;
-import com.rafael.crud.DTOs.UpdateUserDTO;
+import com.rafael.crud.dtos.CreateUserDTO;
+import com.rafael.crud.dtos.UpdateUserDTO;
 import com.rafael.crud.entity.User;
 import com.rafael.crud.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

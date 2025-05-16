@@ -1,8 +1,8 @@
 package com.rafael.crud.controllers;
 
-import com.rafael.crud.DTOs.CreateUserDTO;
-import com.rafael.crud.DTOs.UpdateUserDTO;
-import com.rafael.crud.Services.UserService;
+import com.rafael.crud.dtos.CreateUserDTO;
+import com.rafael.crud.dtos.UpdateUserDTO;
+import com.rafael.crud.services.UserService;
 import com.rafael.crud.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
