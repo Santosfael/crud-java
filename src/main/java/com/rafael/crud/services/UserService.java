@@ -5,8 +5,11 @@ import com.rafael.crud.dtos.UpdateUserDTO;
 import com.rafael.crud.entity.User;
 import com.rafael.crud.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -16,11 +19,14 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-
     @Autowired
     private UserRepository userRepository;
 
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public UUID createUser(CreateUserDTO createUserDTO) {
         var entity = new User(
@@ -28,9 +34,13 @@ public class UserService {
                 createUserDTO.userName(),
                 createUserDTO.fullName(),
                 createUserDTO.email(),
-                encoder.encode(createUserDTO.password()),
+                passwordEncoder.encode(createUserDTO.password()),
                 Instant.now(),
                 null);
+
+        if (userRepository.existsByEmail(entity.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado");
+        }
 
         var userSaved = userRepository.save(entity);
 
@@ -61,7 +71,7 @@ public class UserService {
             }
 
             if (updateUserDTO.password() != null) {
-                user.setPassword(encoder.encode(updateUserDTO.password()));
+                user.setPassword(passwordEncoder.encode(updateUserDTO.password()));
             }
 
             userRepository.save(user);
